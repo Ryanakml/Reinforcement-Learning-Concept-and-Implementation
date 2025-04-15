@@ -4,6 +4,10 @@ This web application demonstrates reinforcement learning concepts through an int
 
 ## Features
 
+![](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*SXhjihVoO1053L_TzEp25Q.png)
+
+![](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*JEVzaKnzFqpPOj04fcT1bQ.png)
+
 - **Interactive Training**: Train a reinforcement learning agent with customizable parameters
 - **Visual Q-value Representation**: Heatmap visualization of learned Q-values
 - **Policy Visualization**: See the optimal actions learned by the agent
