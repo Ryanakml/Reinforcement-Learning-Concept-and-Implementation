@@ -1,3 +1,9 @@
+# Reinforcement Learning Concepts
+This repository contains a collection of reinforcement learning concepts implemented in Python. Each concept is presented in a separate directory, with a README explaining its purpose, implementation details, and usage. To learn the concepts, simply navigate to RL in Math.ipynb 
+
+![](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*bKAjfCijpOw8ijirjCOCAA.png)
+
+
 # Reinforcement Learning Frozen Lake Visualization
 
 This web application demonstrates reinforcement learning concepts through an interactive visualization of the Q-learning algorithm applied to the Frozen Lake environment.
