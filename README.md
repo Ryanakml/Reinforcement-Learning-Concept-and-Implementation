@@ -60,9 +60,27 @@ The application will open in your default web browser.
 ## How to Use
 
 1. Adjust the learning parameters in the sidebar
-2. Go to the "Training & Visualization" tab and click "Train Agent"
-3. Observe the learning metrics and visualizations
-4. Switch to the "Interactive Mode" tab to test the agent's performance
-5. Control the agent manually or let it follow the learned policy
 
+Slippery Environment = False : More accurate
+Slippery Environment = True : More challenging
+
+α = 0.1
+γ = 0.95
+ε = 1 
+episodes = 5000
+
+2. Go to the "Training & Visualization" tab and click "Train Agent"
+
+3. Observe the learning metrics and visualizations
+
+α = new more accurate
+γ = new more accurate
+ε = new more accurate
+episodes = new more accurate
+
+4. Switch to the "Interactive Mode" tab to test the agent's performance
+
+5. Control the agent manually or let it follow the learned policy (Based on Training)
+
+## Learning Process
 Experiment with different parameters to see how they affect the agent's learning process!

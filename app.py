@@ -29,8 +29,12 @@ def render_grid(state):
     # but will be called later when the environment is ready
     if 'initialized' not in st.session_state or not st.session_state.initialized:
         return
+    
+    # Use environment from session state for consistency
+    if not hasattr(st.session_state, 'env'):
+        return
         
-    grid_size = int(np.sqrt(env.observation_space.n))
+    grid_size = int(np.sqrt(st.session_state.env.observation_space.n))
     tiles = ""
     path_positions = set(st.session_state.path) if hasattr(st.session_state, 'path') else set()
     
@@ -163,8 +167,15 @@ if not st.session_state.initialized or st.session_state.Q is None:
     st.session_state.done = False
     st.session_state.path = [st.session_state.state]
     st.session_state.initialized = True
+    # Store environment in session state to maintain consistency
+    st.session_state.env = env
 else:
-    env = gym.make("FrozenLake-v1", is_slippery=st.session_state.is_slippery)
+    # Use the stored environment if available, otherwise create a new one
+    if hasattr(st.session_state, 'env'):
+        env = st.session_state.env
+    else:
+        env = gym.make("FrozenLake-v1", is_slippery=st.session_state.is_slippery)
+        st.session_state.env = env
     n_states = env.observation_space.n
     n_actions = env.action_space.n
     grid_size = int(np.sqrt(n_states))
@@ -193,7 +204,7 @@ with tab1:
             st.session_state.success_rate_history = []
             st.session_state.episode_count = 0
             st.session_state.training_complete = False
-            st.experimental_rerun()
+            st.rerun()
         
         if train_button or (not st.session_state.training_complete and len(st.session_state.rewards_history) == 0):
             progress_bar = st.progress(0)
@@ -340,7 +351,7 @@ with tab1:
                     color = '#90ee90'  # Light green for goal
                 return f'background-color: {color}; font-size: 20px; text-align: center;'
             
-            styled_policy = policy_df.style.applymap(highlight_policy)
+            styled_policy = policy_df.style.map(highlight_policy)
             st.dataframe(styled_policy, use_container_width=True, height=200)
 
 with tab2:
@@ -348,8 +359,9 @@ with tab2:
     
     # Reset interactive environment
     if st.button("🔄 Reset Environment"):
-        st.session_state.state = env.reset()[0]
-        env.reset_called = True  # Mark that reset has been called
+        # Reset the environment and update session state
+        st.session_state.state = st.session_state.env.reset()[0]
+        st.session_state.env.reset_called = True  # Mark that reset has been called
         st.session_state.done = False
         st.session_state.path = [st.session_state.state]
     
@@ -388,14 +400,14 @@ with tab2:
         
         if action is not None and not st.session_state.done:
             # Ensure environment is reset before stepping
-            if not hasattr(env, 'reset_called') or not env.reset_called:
-                env.reset()
-                env.reset_called = True
-            next_state, reward, done, _, _ = env.step(action)
+            if not hasattr(st.session_state.env, 'reset_called') or not st.session_state.env.reset_called:
+                st.session_state.env.reset()
+                st.session_state.env.reset_called = True
+            next_state, reward, done, _, _ = st.session_state.env.step(action)
             st.session_state.state = next_state
             st.session_state.done = done
             st.session_state.path.append(next_state)
-            st.experimental_rerun()
+            st.rerun()
     
     with control_col2:
         # Policy-based navigation
@@ -404,14 +416,14 @@ with tab2:
             state = st.session_state.state
             action = np.argmax(st.session_state.Q[state])
             # Ensure environment is reset before stepping
-            if not hasattr(env, 'reset_called') or not env.reset_called:
-                env.reset()
-                env.reset_called = True
-            next_state, reward, done, _, _ = env.step(action)
+            if not hasattr(st.session_state.env, 'reset_called') or not st.session_state.env.reset_called:
+                st.session_state.env.reset()
+                st.session_state.env.reset_called = True
+            next_state, reward, done, _, _ = st.session_state.env.step(action)
             st.session_state.state = next_state
             st.session_state.done = done
             st.session_state.path.append(next_state)
-            st.experimental_rerun()
+            st.rerun()
     
     # Display result if done
     if st.session_state.done:
@@ -483,10 +495,18 @@ with tab3:
 if st.button("➡️ Next Step"):
     if not st.session_state.done:
         state = st.session_state.state
-        action = np.argmax(st.session_state.Q[state])  # Fixed: Use st.session_state.Q instead of Q
-        next_state, reward, done, _, _ = env.step(action)
+        action = np.argmax(st.session_state.Q[state])  # Use st.session_state.Q
+        # Ensure environment is reset before stepping
+        if not hasattr(st.session_state.env, 'reset_called') or not st.session_state.env.reset_called:
+            st.session_state.env.reset()
+            st.session_state.env.reset_called = True
+        next_state, reward, done, _, _ = st.session_state.env.step(action)
         st.session_state.state = next_state
         st.session_state.done = done
         st.session_state.path.append(next_state)
+        st.rerun()
     else:
-        st.success("Agent has reached the goal 🎉")  # Fixed: English message
+        if st.session_state.state == (int(np.sqrt(st.session_state.env.observation_space.n)) ** 2) - 1:
+            st.success("🎉 Agent reached the goal!")
+        else:
+            st.error("💥 Agent fell into a hole!")
