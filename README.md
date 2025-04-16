@@ -1,7 +1,7 @@
 # Reinforcement Learning Concepts
 This repository contains a collection of reinforcement learning concepts implemented in Python. Each concept is presented in a separate directory, with a README explaining its purpose, implementation details, and usage. To learn the concepts, simply navigate to RL in Math.ipynb 
 
-![](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*bKAjfCijpOw8ijirjCOCAA.png)
+![](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*S1bubWcPjP_zR-0g4AiV5Q.png)
 
 
 # Reinforcement Learning Frozen Lake Visualization
@@ -10,9 +10,9 @@ This web application demonstrates reinforcement learning concepts through an int
 
 ## Features
 
-![](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*SXhjihVoO1053L_TzEp25Q.png)
+![](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*kms9wM4_Y9E7sKRj4kGS3g.png)
 
-![](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*JEVzaKnzFqpPOj04fcT1bQ.png)
+![](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*xJax9699g-XuW9YpIs5VNw.png)
 
 - **Interactive Training**: Train a reinforcement learning agent with customizable parameters
 - **Visual Q-value Representation**: Heatmap visualization of learned Q-values

@@ -110,36 +110,53 @@ def render_grid(state):
 
     # Display action probabilities for current state if Q-table exists
     if hasattr(st.session_state, 'Q') and st.session_state.Q is not None and not st.session_state.done:
-        st.markdown("### Action Probabilities for Current State")
+        st.markdown("### Action Probabilities for Current State", help="Shows the likelihood of each action in the current state")
         q_values = st.session_state.Q[state]
         action_names = ["Left", "Down", "Right", "Up"]
+        action_symbols = ['←', '↓', '→', '↑']
         
         # Convert Q-values to probabilities using softmax
         q_exp = np.exp(q_values - np.max(q_values))  # Subtract max for numerical stability
         probabilities = q_exp / q_exp.sum()
         
-        # Create a bar chart of action probabilities
-        prob_df = pd.DataFrame({
-            'Action': action_names,
-            'Probability': probabilities
-        })
-        
-        # Highlight the best action
+        # Create a compact visualization
         best_action = np.argmax(q_values)
-        colors = ['#1f77b4' if i != best_action else '#ff7f0e' for i in range(len(action_names))]
         
-        fig, ax = plt.subplots(figsize=(8, 3))
-        bars = ax.bar(prob_df['Action'], prob_df['Probability'], color=colors)
-        ax.set_ylim(0, 1)
-        ax.set_ylabel('Probability')
-        ax.set_title('Action Selection Probabilities')
+        # Create a more compact figure with adjusted size to prevent overlap
+        fig, ax = plt.subplots(figsize=(5, 1.5))
         
-        # Add value labels on top of bars
-        for bar in bars:
-            height = bar.get_height()
-            ax.text(bar.get_x() + bar.get_width()/2., height + 0.01,
-                    f'{height:.2f}', ha='center', va='bottom')
+        # Create a custom colormap from light blue to dark blue
+        cmap = LinearSegmentedColormap.from_list(
+            "prob_cmap", [(0, "#e6f2ff"), (0.5, "#99ccff"), (1, "#0066cc")]
+        )
         
+        # Create a 1x4 heatmap for the four directions
+        sns.heatmap(
+            np.array([probabilities]), 
+            annot=np.array([action_symbols]),
+            fmt='',
+            cmap=cmap,
+            cbar=False,
+            linewidths=1.5,
+            ax=ax,
+            annot_kws={"fontsize":12, "weight":"bold"}
+        )
+        
+        # Add probability values with adjusted position to prevent overlap
+        for i, prob in enumerate(probabilities):
+            ax.text(i + 0.5, 0.75, f"{prob:.2f}", 
+                    ha="center", va="center", fontsize=8,
+                    color="black" if prob < 0.7 else "white")
+        
+        # Highlight the best action with a border
+        ax.add_patch(plt.Rectangle((best_action, 0), 1, 1, fill=False, edgecolor='red', lw=2))
+        
+        ax.set_xticklabels([])
+        ax.set_yticklabels([])
+        ax.set_title("Action Probabilities", fontsize=10)
+        
+        # Make the plot more compact
+        plt.tight_layout()
         st.pyplot(fig)
 
 # Sidebar configuration
