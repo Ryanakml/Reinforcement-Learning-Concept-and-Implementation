@@ -10,7 +10,10 @@ This web application demonstrates reinforcement learning concepts through an int
 
 ## Features
 
+### Training & Visualization
 ![](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*kms9wM4_Y9E7sKRj4kGS3g.png)
+
+### Testinf with Interactive Mode
 
 ![](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*xJax9699g-XuW9YpIs5VNw.png)
 
